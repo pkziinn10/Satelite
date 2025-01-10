@@ -1,38 +1,12 @@
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <vector>
-#include <math.h>
+#include "sistemasolar.h"
+#include <cmath>
 #include <cstdlib>
 #include <ctime>
 
+// Vetor de estrelas
 std::vector<glm::vec3> estrelas;
 
-void generateestrelas(int numEstrelas) {
-    estrelas.clear();
-    for (int i = 0; i < numEstrelas; ++i) {
-        float x = ((rand() % 1000) - 500) / 10.0f;
-        float y = ((rand() % 1000) - 500) / 10.0f;
-        float z = ((rand() % 1000) - 500) / 10.0f;
-        estrelas.push_back(glm::vec3(x, y, z));
-    }
-}
-
-void drawestrelas() {
-    glColor3f(1.0f, 1.0f, 1.0f); // Branco
-    glBegin(GL_POINTS);
-    for (const auto& estrela : estrelas) {
-        glVertex3f(estrela.x, estrela.y, estrela.z);
-    }
-    glEnd();
-}
-
-struct Planeta {
-    float raio;
-    float raioOrbita;
-    float velocidadeOrbita;
-    float r, g, b;
-};
-
+// Planetas do sistema solar
 std::vector<Planeta> planetas = {
     {0.5f, 5.0f, 0.01f, 1.0f, 0.0f, 0.0f},
     {0.8f, 8.0f, 0.008f, 1.0f, 0.5f, 0.0f},
@@ -44,9 +18,32 @@ std::vector<Planeta> planetas = {
     {1.4f, 40.0f, 0.001f, 0.0f, 0.0f, 1.0f}
 };
 
-float orbitAngles[8] = {0.0f}; // Ângulos de órbita dos planetas
+// Ângulos de órbita para os planetas
+float orbitAngles[8] = {0.0f};
 
-void drawSphere(float raio, int slices, int stacks, float r, float g, float b) {
+// Gera estrelas aleatoriamente
+void generateestrelas(int numEstrelas) {
+    estrelas.clear();
+    for (int i = 0; i < numEstrelas; ++i) {
+        float x = ((rand() % 1000) - 500) / 10.0f;
+        float y = ((rand() % 1000) - 500) / 10.0f;
+        float z = ((rand() % 1000) - 500) / 10.0f;
+        estrelas.push_back(glm::vec3(x, y, z));
+    }
+}
+
+// Desenha as estrelas
+void drawestrelas() {
+    glColor3f(1.0f, 1.0f, 1.0f); // Branco
+    glBegin(GL_POINTS);
+    for (const auto& estrela : estrelas) {
+        glVertex3f(estrela.x, estrela.y, estrela.z);
+    }
+    glEnd();
+}
+
+// Desenha uma esfera
+void drawSphereS(float raio, int slices, int stacks, float r, float g, float b) {
     glColor3f(r, g, b);
     for (int i = 0; i < slices; i++) {
         for (int j = 0; j < stacks; j++) {
@@ -70,9 +67,10 @@ void drawSphere(float raio, int slices, int stacks, float r, float g, float b) {
     }
 }
 
+// Desenha o sistema solar
 void drawSolarSystem() {
-    drawestrelas(); // Desenhar estrelas primeiro
-    drawSphere(4.0f, 30, 30, 1.0f, 1.0f, 0.0f); // Sol
+    drawestrelas(); // Desenha estrelas primeiro
+    drawSphereS(4.0f, 30, 30, 1.0f, 1.0f, 0.0f); // Sol
 
     for (size_t i = 0; i < planetas.size(); i++) {
         const Planeta& planeta = planetas[i];
@@ -81,10 +79,16 @@ void drawSolarSystem() {
 
         glPushMatrix();
         glTranslatef(x, 0.0f, z);
-        drawSphere(planeta.raio, 20, 20, planeta.r, planeta.g, planeta.b);
+        drawSphereS(planeta.raio, 20, 20, planeta.r, planeta.g, planeta.b);
         glPopMatrix();
 
         orbitAngles[i] += planeta.velocidadeOrbita;
         if (orbitAngles[i] >= 2 * M_PI) orbitAngles[i] -= 2 * M_PI;
     }
+}
+
+// Inicializa o sistema solar
+void initializeSolarSystem() {
+    srand(static_cast<unsigned>(time(0))); // Semente para números aleatórios
+    generateestrelas(100); // Gera 100 estrelas por padrão
 }

@@ -1,7 +1,6 @@
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include "camera.h"
 
+// Inicialização de variáveis globais
 glm::vec3 cameraPos(0.0f, 0.0f, 30.0f); // Posição inicial da câmera
 glm::vec3 cameraFront(0.0f, 0.0f, -1.0f); // Direção da câmera
 glm::vec3 cameraUp(0.0f, 1.0f, 0.0f); // Vetor 'up' da câmera
@@ -10,6 +9,7 @@ float vertical = 0.0f;  // Inclinação vertical da câmera
 float inicialX = 400, inicialY = 400; // Coordenadas iniciais do mouse
 bool firstMouse = true;
 
+// Implementação da função de configuração da câmera
 void setCamera() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -21,23 +21,7 @@ void setCamera() {
     glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
     glLoadMatrixf(&view[0][0]);
 }
-
-void processInput(GLFWwindow *window) {
-    float cameraSpeed = 0.5f;
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        cameraPos += cameraSpeed * cameraFront;
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        cameraPos -= cameraSpeed * cameraFront;
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-        cameraPos.y += cameraSpeed;
-    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-        cameraPos.y -= cameraSpeed;
-}
-
+// Implementação da função de callback do mouse
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     if (firstMouse) {
         inicialX = xpos;
