@@ -1,36 +1,39 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <vector>
+#include <math.h>
+#include <cstdlib>
+#include <ctime>
 
-std::vector<glm::vec3> stars;
+std::vector<glm::vec3> estrelas;
 
-void generateStars(int numStars) {
-    stars.clear();
-    for (int i = 0; i < numStars; ++i) {
+void generateestrelas(int numEstrelas) {
+    estrelas.clear();
+    for (int i = 0; i < numEstrelas; ++i) {
         float x = ((rand() % 1000) - 500) / 10.0f;
         float y = ((rand() % 1000) - 500) / 10.0f;
         float z = ((rand() % 1000) - 500) / 10.0f;
-        stars.push_back(glm::vec3(x, y, z));
+        estrelas.push_back(glm::vec3(x, y, z));
     }
 }
 
-void drawStars() {
+void drawestrelas() {
     glColor3f(1.0f, 1.0f, 1.0f); // Branco
     glBegin(GL_POINTS);
-    for (const auto& star : stars) {
-        glVertex3f(star.x, star.y, star.z);
+    for (const auto& estrela : estrelas) {
+        glVertex3f(estrela.x, estrela.y, estrela.z);
     }
     glEnd();
 }
 
-struct Planet {
-    float radius;
-    float orbitRadius;
-    float orbitSpeed;
+struct Planeta {
+    float raio;
+    float raioOrbita;
+    float velocidadeOrbita;
     float r, g, b;
 };
 
-std::vector<Planet> planets = {
+std::vector<Planeta> planetas = {
     {0.5f, 5.0f, 0.01f, 1.0f, 0.0f, 0.0f},
     {0.8f, 8.0f, 0.008f, 1.0f, 0.5f, 0.0f},
     {1.0f, 12.0f, 0.007f, 0.0f, 0.5f, 1.0f},
@@ -43,7 +46,7 @@ std::vector<Planet> planets = {
 
 float orbitAngles[8] = {0.0f}; // Ângulos de órbita dos planetas
 
-void drawSphere(float radius, int slices, int stacks, float r, float g, float b) {
+void drawSphere(float raio, int slices, int stacks, float r, float g, float b) {
     glColor3f(r, g, b);
     for (int i = 0; i < slices; i++) {
         for (int j = 0; j < stacks; j++) {
@@ -52,10 +55,10 @@ void drawSphere(float radius, int slices, int stacks, float r, float g, float b)
             float phi1 = j * M_PI / stacks;
             float phi2 = (j + 1) * M_PI / stacks;
 
-            glm::vec3 p1(radius * sin(phi1) * cos(theta1), radius * sin(phi1) * sin(theta1), radius * cos(phi1));
-            glm::vec3 p2(radius * sin(phi1) * cos(theta2), radius * sin(phi1) * sin(theta2), radius * cos(phi1));
-            glm::vec3 p3(radius * sin(phi2) * cos(theta2), radius * sin(phi2) * sin(theta2), radius * cos(phi2));
-            glm::vec3 p4(radius * sin(phi2) * cos(theta1), radius * sin(phi2) * sin(theta1), radius * cos(phi2));
+            glm::vec3 p1(raio * sin(phi1) * cos(theta1), raio * sin(phi1) * sin(theta1), raio * cos(phi1));
+            glm::vec3 p2(raio * sin(phi1) * cos(theta2), raio * sin(phi1) * sin(theta2), raio * cos(phi1));
+            glm::vec3 p3(raio * sin(phi2) * cos(theta2), raio * sin(phi2) * sin(theta2), raio * cos(phi2));
+            glm::vec3 p4(raio * sin(phi2) * cos(theta1), raio * sin(phi2) * sin(theta1), raio * cos(phi2));
 
             glBegin(GL_QUADS);
                 glVertex3f(p1.x, p1.y, p1.z);
@@ -68,20 +71,20 @@ void drawSphere(float radius, int slices, int stacks, float r, float g, float b)
 }
 
 void drawSolarSystem() {
-    drawStars(); // Desenhar estrelas primeiro
+    drawestrelas(); // Desenhar estrelas primeiro
     drawSphere(4.0f, 30, 30, 1.0f, 1.0f, 0.0f); // Sol
 
-    for (size_t i = 0; i < planets.size(); i++) {
-        const Planet& planet = planets[i];
-        float x = planet.orbitRadius * cos(orbitAngles[i]);
-        float z = planet.orbitRadius * sin(orbitAngles[i]);
+    for (size_t i = 0; i < planetas.size(); i++) {
+        const Planeta& planeta = planetas[i];
+        float x = planeta.raioOrbita * cos(orbitAngles[i]);
+        float z = planeta.raioOrbita * sin(orbitAngles[i]);
 
         glPushMatrix();
         glTranslatef(x, 0.0f, z);
-        drawSphere(planet.radius, 20, 20, planet.r, planet.g, planet.b);
+        drawSphere(planeta.raio, 20, 20, planeta.r, planeta.g, planeta.b);
         glPopMatrix();
 
-        orbitAngles[i] += planet.orbitSpeed;
+        orbitAngles[i] += planeta.velocidadeOrbita;
         if (orbitAngles[i] >= 2 * M_PI) orbitAngles[i] -= 2 * M_PI;
     }
 }

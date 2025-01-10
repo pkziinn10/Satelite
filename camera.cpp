@@ -5,16 +5,16 @@
 glm::vec3 cameraPos(0.0f, 0.0f, 30.0f); // Posição inicial da câmera
 glm::vec3 cameraFront(0.0f, 0.0f, -1.0f); // Direção da câmera
 glm::vec3 cameraUp(0.0f, 1.0f, 0.0f); // Vetor 'up' da câmera
-float yaw = -90.0f;  // Rotação horizontal da câmera
-float pitch = 0.0f;  // Inclinação vertical da câmera
-float lastX = 400, lastY = 400; // Coordenadas iniciais do mouse
+float horizontal = -90.0f;  // Rotação horizontal da câmera
+float vertical = 0.0f;  // Inclinação vertical da câmera
+float inicialX = 400, inicialY = 400; // Coordenadas iniciais do mouse
 bool firstMouse = true;
 
 void setCamera() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glm::mat4 projection = glm::perspective(glm::radians(30.0f), 1.0f, 0.1f, 200.0f);
-    glLoadMatrixf(&projection[0][0]);
+    glm::mat4 projecao = glm::perspective(glm::radians(30.0f), 1.0f, 0.1f, 200.0f);
+    glLoadMatrixf(&projecao[0][0]);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -40,31 +40,31 @@ void processInput(GLFWwindow *window) {
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     if (firstMouse) {
-        lastX = xpos;
-        lastY = ypos;
+        inicialX = xpos;
+        inicialY = ypos;
         firstMouse = false;
     }
 
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos;
-    lastX = xpos;
-    lastY = ypos;
+    float xoffset = xpos - inicialX;
+    float yoffset = inicialY - ypos;
+    inicialX = xpos;
+    inicialY = ypos;
 
     float sensitivity = 0.1f;
     xoffset *= sensitivity;
     yoffset *= sensitivity;
 
-    yaw += xoffset;
-    pitch += yoffset;
+    horizontal += xoffset;
+    vertical += yoffset;
 
-    if (pitch > 89.0f)
-        pitch = 89.0f;
-    if (pitch < -89.0f)
-        pitch = -89.0f;
+    if (vertical > 89.0f)
+        vertical = 89.0f;
+    if (vertical < -89.0f)
+        vertical = -89.0f;
 
     glm::vec3 front;
-    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    front.y = sin(glm::radians(pitch));
-    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    front.x = cos(glm::radians(horizontal)) * cos(glm::radians(vertical));
+    front.y = sin(glm::radians(vertical));
+    front.z = sin(glm::radians(horizontal)) * cos(glm::radians(vertical));
     cameraFront = glm::normalize(front);
 }
