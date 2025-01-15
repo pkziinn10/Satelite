@@ -1,15 +1,37 @@
 #include "satelite.h"
 #include <cmath>
 
+// Vetor de estrelas
+std::vector<glm::vec3> estrelasSatelite;
 // Corpos celestes: Terra e Lua
-Body earth = {2.0f, 0.0f, 0.0f, 0.0f, 0.5f, 1.0f};  // Terra fixa no centro
+Body terra = {2.0f, 0.0f, 0.0f, 0.0f, 0.5f, 1.0f};  // Terra fixa no centro
 Body lua = {0.5f, 5.0f, 0.02f, 0.7f, 0.7f, 0.7f};  // Lua orbitando a Terra
 
 // Ângulo de órbita da Lua
 float orbitaLua = 0.0f;
 
+void geraEstrelasSatelite(int numEstrelas) {
+    estrelasSatelite.clear();
+    for (int i = 0; i < numEstrelas; ++i) {
+        float x = ((rand() % 1000) - 500) / 10.0f;
+        float y = ((rand() % 1000) - 500) / 10.0f;
+        float z = ((rand() % 1000) - 500) / 10.0f;
+        estrelasSatelite.push_back(glm::vec3(x, y, z));
+    }
+}
+
+// Desenha as estrelas
+void desenhaEstrelasSatelite() {
+    glColor3f(1.0f, 1.0f, 1.0f); // Branco
+    glBegin(GL_POINTS);
+    for (const auto& estrela : estrelasSatelite) {
+        glVertex3f(estrela.x, estrela.y, estrela.z);
+    }
+    glEnd();
+}
+
 // Função para desenhar uma esfera
-void drawSphere(float raio, int fatias, int pilhas, float r, float g, float b) {
+void desenhaEsferas(float raio, int fatias, int pilhas, float r, float g, float b) {
     glColor3f(r, g, b);
     for (int i = 0; i < fatias; i++) {
         for (int j = 0; j < pilhas; j++) {
@@ -34,9 +56,10 @@ void drawSphere(float raio, int fatias, int pilhas, float r, float g, float b) {
 }
 
 // Função para desenhar a Terra e a Lua
-void drawEarthAndlua() {
+void desenhaTerraELua() {
+    desenhaEstrelasSatelite();
     // Desenha a Terra
-    drawSphere(earth.raio, 30, 30, earth.r, earth.g, earth.b);
+    desenhaEsferas(terra.raio, 30, 30, terra.r, terra.g, terra.b);
 
     // Calcula a posição da Lua
     float luaX = lua.raioOrbita * cos(orbitaLua);
@@ -44,7 +67,7 @@ void drawEarthAndlua() {
 
     glPushMatrix();
     glTranslatef(luaX, 0.0f, luaZ);
-    drawSphere(lua.raio, 20, 20, lua.r, lua.g, lua.b); // Lua
+    desenhaEsferas(lua.raio, 20, 20, lua.r, lua.g, lua.b); // Lua
     glPopMatrix();
 
     // Atualiza o ângulo de órbita da Lua
@@ -53,6 +76,8 @@ void drawEarthAndlua() {
 }
 
 // Inicializa a cena (caso seja necessário configurar algo adicional no futuro)
-void initializeScene() {
+void inicializaSatelite() {
     // Configurações iniciais, se necessárias
+    srand(static_cast<unsigned>(time(0)));
+    geraEstrelasSatelite(100); // Gera 100 estrelas por padrão
 }

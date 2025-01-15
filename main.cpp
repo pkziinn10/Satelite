@@ -19,9 +19,9 @@ void display() {
     setCamera(); // Configura a câmera antes de desenhar
 
     if (renderMode == 1) {
-        drawSolarSystem(); // Desenha o Sistema Solar
+        desenhaSistemaSolar(); // Desenha o Sistema Solar
     } else if (renderMode == 2) {
-        drawEarthAndlua(); // Desenha a Terra com a Lua orbitando
+        desenhaTerraELua(); // Desenha a Terra com a Lua orbitando
     }
 
     glDisable(GL_DEPTH_TEST);
@@ -60,7 +60,7 @@ int main(void) {
     if (!glfwInit()) return -1;
 
     // Criação da janela
-    GLFWwindow* window = glfwCreateWindow(800, 800, "Sistema Solar e Lua Orbitando a Terra", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(800, 800, "Sistema Solar e Lua orbitando a Terra", NULL, NULL);
     if (!window) {
         glfwTerminate();
         return -1;
@@ -73,8 +73,8 @@ int main(void) {
     glCullFace(GL_BACK);
 
     // Inicialização do sistema solar e das estrelas
-    initializeSolarSystem(); // Gera as estrelas e inicializa o sistema solar
-
+    inicializaSistemaSolar(); // Gera as estrelas e inicializa o sistema solar
+    inicializaSatelite(); // Gera as estrelas e inicializa o satelite
     // Configuração da câmera
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);

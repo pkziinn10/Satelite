@@ -1,6 +1,8 @@
 #ifndef SATELITE_H
 #define SATELITE_H
 
+#include <ctime>
+#include <vector>
 #include <GLFW/glfw3.h>
 #include <GL/gl.h>
 #include <glm/glm.hpp>
@@ -15,17 +17,25 @@ struct Body {
 };
 
 // Variáveis globais para os corpos celestes
-extern Body earth;
+extern Body terra;
 extern Body lua;
 
 // Variáveis globais para órbitas
 extern float orbitaLua;
 
-// Funções de desenho
-void drawSphere(float raio, int fatias, int pilhas, float r, float g, float b);
-void drawEarthAndlua();
+// Função para gerar estrelas no satelite ( Terra e Lua )
+void geraEstrelasSatelite(int numEstrelas);
+
+// Função que desenha as estrelas no satelite ( Terra e Lua )
+void desenhaEstrelasSatelite();
+
+// Funções que desenha as esferas
+void desenhaEsferas(float raio, int fatias, int pilhas, float r, float g, float b);
+
+//Função de desenhar Terra e Lua
+void desenhaTerraELua();
 
 // Inicializa a cena
-void initializeScene();
+void inicializaSatelite();
 
 #endif // SATELITE_H

@@ -14,8 +14,10 @@ extern float vertical;
 extern float inicialX, inicialY;
 extern bool firstMouse;
 
-// Funções da câmera
+// Função da incialização da câmera
 void setCamera();
+
+// Função callback para a movimentação do mouse
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 
 #endif // CAMERA_H
