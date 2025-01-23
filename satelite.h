@@ -1,6 +1,7 @@
 #ifndef SATELITE_H
 #define SATELITE_H
 
+#include <GL/glew.h>
 #include <ctime>
 #include <vector>
 #include <GLFW/glfw3.h>

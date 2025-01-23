@@ -1,14 +1,18 @@
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <GL/gl.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
-#include <cstdlib> // Para gerar números aleatórios
-#include <ctime>   // Para inicializar a semente do gerador de números
+#include <cstdlib>
+#include <ctime>
 #include <math.h>
+#include <filesystem>
 #include "camera.h"
-#include "sistemasolar.h"  // Incluindo o cabeçalho do sistema solar
-#include "satelite.h"     // Incluindo o cabeçalho da Terra e Lua
+#include "textura.h"
+#include "sistemasolar.h"
+#include "satelite.h"
+#include "stb_image.h"
 
 int renderMode = 1;
 
@@ -19,9 +23,9 @@ void display() {
     setCamera(); // Configura a câmera antes de desenhar
 
     if (renderMode == 1) {
-        desenhaSistemaSolar(); // Desenha o Sistema Solar
+        desenhaSistemaSolar();
     } else if (renderMode == 2) {
-        desenhaTerraELua(); // Desenha a Terra com a Lua orbitando
+        desenhaTerraELua();
     }
 
     glDisable(GL_DEPTH_TEST);
@@ -72,24 +76,59 @@ int main(void) {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 
+    // Carregar as texturas
+    GLuint solTextura = carregaTextura("/home/pk/projects/C/computacao-grafica/av1/img/sun.jpg");
+    GLuint mercurioTextura = carregaTextura("/home/pk/projects/C/computacao-grafica/av1/img/mercury.jpg");
+    GLuint venusTextura = carregaTextura("/home/pk/projects/C/computacao-grafica/av1/img/venus.jpg");
+    GLuint terraTextura = carregaTextura("/home/pk/projects/C/computacao-grafica/av1/img/earth.jpg");
+    GLuint marteTextura = carregaTextura("/home/pk/projects/C/computacao-grafica/av1/img/mars.jpg");
+    GLuint jupiterTextura = carregaTextura("/home/pk/projects/C/computacao-grafica/av1/img/jupiter.jpg");
+    GLuint saturnoTextura = carregaTextura("/home/pk/projects/C/computacao-grafica/av1/img/saturn.jpg");
+    GLuint uranoTextura = carregaTextura("/home/pk/projects/C/computacao-grafica/av1/img/uranus.jpg");
+    GLuint netunoTextura = carregaTextura("/home/pk/projects/C/computacao-grafica/av1/img/neptune.jpg");
+
+std::cout << "Diretório atual: " << std::filesystem::current_path() << std::endl;
+    if (std::filesystem::exists("/home/pk/projects/C/computacao-grafica/av1/img/earth.jpg")) {
+        std::cout << "Imagem encontrada!" << std::endl;
+    } else {
+        std::cerr << "Imagem não encontrada!" << std::endl;
+        return -1;
+    }
+
+
+    // Carrega a textura do planeta
+    GLuint texturaPlaneta = carregaTextura("/home/pk/projects/C/computacao-grafica/av1/img/earth.jpg");
+
     // Inicialização do sistema solar e das estrelas
-    inicializaSistemaSolar(); // Gera as estrelas e inicializa o sistema solar
-    inicializaSatelite(); // Gera as estrelas e inicializa o satelite
+    inicializaSistemaSolar();
+    inicializaSatelite();
+
     // Configuração da câmera
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
+    // Inicializa os planetas com as texturas carregadas
+    planetas[0].textura = mercurioTextura;
+    planetas[1].textura = venusTextura;
+    planetas[2].textura = terraTextura;
+    planetas[3].textura = marteTextura;
+    planetas[4].textura = jupiterTextura;
+    planetas[5].textura = saturnoTextura;
+    planetas[6].textura = uranoTextura;
+    planetas[7].textura = netunoTextura;
+    // Se quiser adicionar textura para o Sol também
+    solTextura = carregaTextura("/home/pk/projects/C/computacao-grafica/av1/img/sun.jpg");
+
     // Loop principal
     while (!glfwWindowShouldClose(window)) {
-        processInput(window); // Processa entradas do teclado
+        processInput(window);
 
-        display(); // Chama a função para renderizar o conteúdo
+        display();
 
-        glfwSwapBuffers(window); // Troca os buffers para mostrar a renderização
-        glfwPollEvents(); // Processa eventos (como teclados, mouse, etc.)
+        glfwSwapBuffers(window);
+        glfwPollEvents();
     }
 
-    // Finaliza o GLFW
     glfwTerminate();
     return 0;
 }

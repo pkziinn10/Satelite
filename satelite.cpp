@@ -79,5 +79,5 @@ void desenhaTerraELua() {
 void inicializaSatelite() {
     // Configurações iniciais, se necessárias
     srand(static_cast<unsigned>(time(0)));
-    geraEstrelasSatelite(100); // Gera 100 estrelas por padrão
+    geraEstrelasSatelite(200);
 }
