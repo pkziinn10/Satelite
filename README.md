@@ -45,3 +45,26 @@ Utilize o seguinte comando para compilar o projeto diretamente:
 ```bash
 g++ main.cpp camera.cpp satelite.cpp sistemasolar.cpp textura.cpp stb_image.cpp -o Satelite -lGL -lGLU -lglut
 ./Satelite
+```
+
+## ▶️ Compilação com CMake
+Se preferir utilizar o CMake, siga os passos abaixo:
+
+```bash
+
+mkdir build
+cd build
+cmake ..
+make
+./Satelite
+```
+
+## 📫 Contato
+
+- Caso tenha dúvidas ou queira trocar ideias:
+
+- 📧 Email: pedrinhokauan824@gmail.com
+
+- 💼 LinkedIn: www.linkedin.com/in/pkziinn10
+
+- 💻 GitHub: @pkziinn10
